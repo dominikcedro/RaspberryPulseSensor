@@ -8,6 +8,9 @@ import time
 # I2C address
 sensor_address = 0x57
 
+# mode change register
+mode_change = 0x09
+
 # instance of smbus
 bus = smbus2.SMBus(1)
 
@@ -28,3 +31,18 @@ while True:
     print(data)
     time.sleep(0.1)
 
+def start_sensor(channel=1, address = 0x57):
+    """
+    Starts sensor
+    """
+    bus = smbus2.SMBus(channel)
+    bus.write_block_data(address,mode_change,0x80)
+
+
+def stop_sensor(channel=1, address = 0x57):
+    """
+    Stops sensor
+    """
+    bus = smbus2.SMBus(channel)
+    bus.write_block_data(address, mode_change, 0x40)
+    time.sleep(1)
