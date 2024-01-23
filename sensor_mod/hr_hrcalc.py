@@ -17,6 +17,11 @@ def calc_hr_and_spo2(ir_data, red_data):
     By detecting  peaks of PPG cycle and corresponding AC/DC
     of red/infra-red signal, the an_ratio for the SPO2 is computed.
     """
+
+    # apply moving average to raw data @Dominik
+    ir_data = moving_average(ir_data, MA_SIZE)
+    red_data = moving_average(red_data, MA_SIZE)
+
     # get dc mean
     ir_mean = int(np.mean(ir_data))
 
@@ -48,6 +53,12 @@ def calc_hr_and_spo2(ir_data, red_data):
         hr_valid = False
 
     return hr, hr_valid
+
+def moving_average(signal, size):
+    """
+    Compute moving average
+    """
+    return np.convolve(signal, np.ones(size)/size, mode='valid')
 
 
 def find_peaks(x, size, min_height, min_dist, max_num):
