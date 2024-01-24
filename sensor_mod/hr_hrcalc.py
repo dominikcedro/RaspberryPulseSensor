@@ -10,6 +10,13 @@ MA_SIZE = 4
 # sampling frequency * 4 (in algorithm.h)
 BUFFER_SIZE = 100
 
+#TODO 1 implement band pass filter
+
+#TODO 2 implement loww pass filter
+
+#TODO 3 create "is sensor on" boolean return function for Pola
+
+#TODO 4 data smoothing filter, less output, more stable
 
 # this assumes ir_data and red_data as np.array
 def calc_hr_and_spo2(ir_data, red_data):
