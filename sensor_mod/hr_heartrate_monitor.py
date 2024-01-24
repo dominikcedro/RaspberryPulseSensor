@@ -4,6 +4,7 @@ import hr_hrcalc
 import threading
 import time
 import numpy as np
+from hr_plot import plot_hr
 
 
 class HeartRateMonitor(object):
@@ -16,6 +17,7 @@ class HeartRateMonitor(object):
     def __init__(self, print_raw=False, print_result=False):
         self.bpm = 0
         self.isSensor = False # to check if sensor is connected
+        self.bpm_readings = []
         if print_raw is True:
             print('IR, Red')
         self.print_raw = print_raw
@@ -41,7 +43,6 @@ class HeartRateMonitor(object):
                     ir_data.append(ir)
                     red_data.append(red)
                     sensor_output_sum += ir
-                    counter += 1
                     if self.print_raw:
                         print("{0}, {1}".format(ir, red))
 
@@ -56,6 +57,7 @@ class HeartRateMonitor(object):
                         while len(bpms) > 4:
                             bpms.pop(0)
                         self.bpm = np.mean(bpms)
+                        self.bpm_readings.append(self.bpm)  # Add this line
                         if (np.mean(ir_data) < 50000 and np.mean(red_data) < 50000): # decided to leave ir to validate
                             # finger detected
                             self.bpm = 0
@@ -64,12 +66,6 @@ class HeartRateMonitor(object):
                         if self.print_result:
                             #print(f"BPM: {self.bpm}")
                             print("BPM: ")
-
-            if counter >= 5 / self.LOOP_TIME:
-                print("Average sensor output in the last 5 seconds: ", sensor_output_sum / counter)
-                sensor_output_sum = 0
-                counter = 0
-            time.sleep(self.LOOP_TIME)
 
         sensor.shutdown()
 
@@ -84,3 +80,7 @@ class HeartRateMonitor(object):
         self.bpm = 0
         self.isSensor = False
         self._thread.join(timeout)
+        print(self.bpm_readings)  # Add this line
+        plot_hr(self.bpm_readings)
+        self.bpm_readings = []
+
