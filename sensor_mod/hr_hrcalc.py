@@ -14,7 +14,7 @@ BUFFER_SIZE = 100
 
 #TODO 2 implement loww pass filter
 
-#TODO 3 create "is sensor on" boolean return function for Pola
+
 
 #TODO 4 data smoothing filter, less output, more stable
 
@@ -32,7 +32,7 @@ def calc_hr_and_spo2(ir_data, red_data):
     # get dc mean
     ir_mean = int(np.mean(ir_data))
 
-    # remove DC mean and inver signal
+    # remove DC mean and invert signal
     # this lets peak detecter detect valley
     x = -1 * (np.array(ir_data) - ir_mean)
 

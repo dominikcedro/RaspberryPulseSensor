@@ -15,6 +15,7 @@ class HeartRateMonitor(object):
 
     def __init__(self, print_raw=False, print_result=False):
         self.bpm = 0
+        self.isSensor = False # to check if sensor is connected
         if print_raw is True:
             print('IR, Red')
         self.print_raw = print_raw
@@ -25,6 +26,8 @@ class HeartRateMonitor(object):
         ir_data = []
         red_data = []
         bpms = []
+        time_counter = 0
+        sensor_output_sum = 0
 
         # run until told to stop
         while not self._thread.stopped:
@@ -37,6 +40,8 @@ class HeartRateMonitor(object):
                     num_bytes -= 1
                     ir_data.append(ir)
                     red_data.append(red)
+                    sensor_output_sum += ir
+                    counter += 1
                     if self.print_raw:
                         print("{0}, {1}".format(ir, red))
 
@@ -57,8 +62,13 @@ class HeartRateMonitor(object):
                             if self.print_result:
                                 print("Finger not detected") #TODO: communication with frontend
                         if self.print_result:
-                            print(f"BPM: {self.bpm}")
+                            #print(f"BPM: {self.bpm}")
+                            print("BPM: ")
 
+            if counter >= 5 / self.LOOP_TIME:
+                print("Average sensor output in the last 5 seconds: ", sensor_output_sum / counter)
+                sensor_output_sum = 0
+                counter = 0
             time.sleep(self.LOOP_TIME)
 
         sensor.shutdown()
@@ -66,9 +76,11 @@ class HeartRateMonitor(object):
     def start_sensor(self):
         self._thread = threading.Thread(target=self.run_sensor)
         self._thread.stopped = False
+        self.isSensor = True
         self._thread.start()
 
     def stop_sensor(self, timeout=2.0):
         self._thread.stopped = True
         self.bpm = 0
+        self.isSensor = False
         self._thread.join(timeout)
