@@ -1,12 +1,12 @@
 import matplotlib.pyplot as plt
 
 
-def plot_hr(hr_readings):
-    """
-    Plot heart rate readings
+def plot_hr(hr_readings: list):
+    """Plot heart rate readings
     ARGS:
         hr_readings: list of heart rate readings
-
+    RETURNS:
+        fig: matplotlib figure
     """
     fig = plt.figure()
     time_points = range(len(hr_readings))
@@ -16,4 +16,3 @@ def plot_hr(hr_readings):
     plt.xticks([])
     plt.ylabel('Heart Rate')
     return fig
-

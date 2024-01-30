@@ -14,14 +14,10 @@ class HeartRateMonitor(object):
 
     LOOP_TIME = 0.01
 
-    def __init__(self, print_raw=False, print_result=False):
+    def __init__(self):
         self.bpm = 0
-        self.isSensor = False # to check if sensor is connected
+        self.isSensor = False
         self.bpm_readings = []
-        if print_raw is True:
-            print('IR, Red')
-        self.print_raw = print_raw
-        self.print_result = print_result
         self.result = 0
 
     def run_sensor(self):
@@ -29,23 +25,18 @@ class HeartRateMonitor(object):
         ir_data = []
         red_data = []
         bpms = []
-        time_counter = 0
         sensor_output_sum = 0
 
-        # run until told to stop
+
         while not self._thread.stopped:
-            # check if any data is available
             num_bytes = sensor.get_data_present()
             if num_bytes > 0:
-                # grab all the data and stash it into arrays
                 while num_bytes > 0:
                     red, ir = sensor.read_fifo()
                     num_bytes -= 1
                     ir_data.append(ir)
                     red_data.append(red)
                     sensor_output_sum += ir
-                    if self.print_raw:
-                        print("{0}, {1}".format(ir, red))
 
                 while len(ir_data) > 100:
                     ir_data.pop(0)
@@ -58,16 +49,9 @@ class HeartRateMonitor(object):
                         while len(bpms) > 4:
                             bpms.pop(0)
                         self.bpm = np.mean(bpms)
-                        self.bpm_readings.append(self.bpm)  # Add this line
-                        if (np.mean(ir_data) < 50000 and np.mean(red_data) < 50000): # decided to leave ir to validate
-                            # finger detected
+                        self.bpm_readings.append(self.bpm)
+                        if (np.mean(ir_data) < 50000 and np.mean(red_data) < 50000):
                             self.bpm = 0
-                            if self.print_result:
-                                print("Finger not detected") #TODO: communication with frontend
-                        if self.print_result:
-                            #print(f"BPM: {self.bpm}")
-                            print("BPM: ")
-
         sensor.shutdown()
 
     def start_sensor(self):

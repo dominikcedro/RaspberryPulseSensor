@@ -1,35 +1,28 @@
-# -*-coding:utf-8
+"""
+@author: Doug Burrell, modified by Dominik Cedro
+"""
 
 import numpy as np
 
-# 25 samples per second (in algorithm.h)
-SAMPLE_FREQ = 25
-# taking moving average of 4 samples when calculating HR
-# in algorithm.h, "DONOT CHANGE" comment is attached
-MA_SIZE = 4
-# sampling frequency * 4 (in algorithm.h)
-BUFFER_SIZE = 100
+# # 25 samples per second (in algorithm.h)
 
-#TODO 1 implement band pass filter
+# # taking moving average of 4 samples when calculating HR
+# # in algorithm.h, "DONOT CHANGE" comment is attached
 
-#TODO 2 implement loww pass filter
+# # sampling frequency * 4 (in algorithm.h)
 
-
-
-#TODO 4 data smoothing filter, less output, more stable
 
 # this assumes ir_data and red_data as np.array
-def calc_hr_and_spo2(ir_data, red_data):
+def calc_hr_and_spo2(ir_data, SAMPLE_FREQ=25, MA_SIZE=4, BUFFER_SIZE=1):
     """
     By detecting  peaks of PPG cycle and corresponding AC/DC
     of red/infra-red signal, the an_ratio for the SPO2 is computed.
     """
 
-    # get dc mean
     ir_mean = int(np.mean(ir_data))
 
     # remove DC mean and invert signal
-    # this lets peak detecter detect valley
+    # this lets peak detector detect valley
     x = -1 * (np.array(ir_data) - ir_mean)
 
     # 4 point moving average
