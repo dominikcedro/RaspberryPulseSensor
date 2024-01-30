@@ -8,9 +8,12 @@ def plot_hr(hr_readings):
         hr_readings: list of heart rate readings
 
     """
+    fig = plt.figure()
     time_points = range(len(hr_readings))
-    plt.plot(time_points, hr_readings,'-r')
+    plt.plot(time_points, hr_readings, color='orange', linestyle='solid', linewidth=2, markersize=12)
     plt.title('BPM Readings Over Time')
     plt.xlabel('Time')
+    plt.xticks([])
     plt.ylabel('Heart Rate')
-    plt.show()
+    return fig
+

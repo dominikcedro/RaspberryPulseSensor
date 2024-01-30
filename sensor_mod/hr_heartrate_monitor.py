@@ -22,6 +22,7 @@ class HeartRateMonitor(object):
             print('IR, Red')
         self.print_raw = print_raw
         self.print_result = print_result
+        self.result = 0
 
     def run_sensor(self):
         sensor = MAX30102()
@@ -70,6 +71,7 @@ class HeartRateMonitor(object):
         sensor.shutdown()
 
     def start_sensor(self):
+        self.bpm_readings = []
         self._thread = threading.Thread(target=self.run_sensor)
         self._thread.stopped = False
         self.isSensor = True
@@ -81,6 +83,8 @@ class HeartRateMonitor(object):
         self.isSensor = False
         self._thread.join(timeout)
         print(self.bpm_readings)  # Add this line
-        plot_hr(self.bpm_readings)
-        self.bpm_readings = []
+        fig= plot_hr(self.bpm_readings)
+        self.result = np.mean(self.bpm_readings)
+
+        return self.result, fig
 

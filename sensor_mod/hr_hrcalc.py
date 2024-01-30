@@ -25,10 +25,6 @@ def calc_hr_and_spo2(ir_data, red_data):
     of red/infra-red signal, the an_ratio for the SPO2 is computed.
     """
 
-    # apply moving average to raw data @Dominik
-    ir_data = moving_average(ir_data, MA_SIZE)
-    red_data = moving_average(red_data, MA_SIZE)
-
     # get dc mean
     ir_mean = int(np.mean(ir_data))
 
