@@ -1,3 +1,6 @@
+"""
+@author: Dominik Cedro
+"""
 import unittest
 from sensor_mod import hr_hrcalc
 
@@ -15,23 +18,13 @@ class TestHrCalc(unittest.TestCase):
         self.assertEqual(hr, expected_hr)
         self.assertEqual(hr_valid, expected_hr_valid)
 
-    # ran more tests to test the methods in hr_calc.py
-    # def test_moving_average(self):
-    #     signal = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    #     size = 3
-    #     expected = [2, 3, 4, 5, 6, 7]
-    #     self.assertEqual(hr_hrcalc.moving_average(signal, size), expected)
+    def test_moving_average(self):
+        # test 2 border cases for function moving_average
+        signal = [1, 2, 3]
+        size = 1
+        expected = [1, 2, 3]
+        self.assertEqual(hr_hrcalc.moving_average(signal, size), expected)
 
-    # def test_find_peaks(self):
-    #     dummy_ir = [60000, 70000, 60000, 90000, 100000, 90000, 60000, 70000, 60000]
-    #     size = len(dummy_ir)
-    #     min_height = 60000
-    #     min_dist = 1
-    #     max_num = 3
-    #     # The expected result depends on the specific behavior of your find_peaks function
-    #     # Replace 'expected' with the expected output for your dummy_ir data
-    #     expected = ([], 0)
-    #     self.assertEqual(hr_hrcalc.find_peaks(dummy_ir, size, min_height, min_dist, max_num), expected)
 
     def test_find_peaks_above_min_height1(self):
         x = [1, 2, 1]
@@ -66,6 +59,25 @@ class TestHrCalc(unittest.TestCase):
         max_num = 3
         expected = ([], 0)
         self.assertEqual(hr_hrcalc.find_peaks_above_min_height(x, size, min_height, max_num), expected)
+
+    def test_remove_close_peaks(self):
+        # test 2 border cases for function remove_close_peaks
+        n_peaks = 1
+        ir_valley_locs = [1]
+        x = [1, 2, 3]
+        min_dist = 1
+        expected = ([1], 1)
+        self.assertEqual(hr_hrcalc.remove_close_peaks(n_peaks, ir_valley_locs, x, min_dist), expected)
+
+
+    def test_remove_close_peaks2(self):
+        n_peaks = 1
+        ir_valley_locs = [1]
+        x = [1, 2, 3]
+        min_dist = 1
+        expected = ([1], 1)
+        self.assertEqual(hr_hrcalc.remove_close_peaks(n_peaks, ir_valley_locs, x, min_dist), expected)
+
 
 
 if __name__ == '__main__':

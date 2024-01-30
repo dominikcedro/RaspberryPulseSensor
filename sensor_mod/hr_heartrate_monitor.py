@@ -1,4 +1,7 @@
-
+"""
+@author: Doug Durrel modified Dominik Cedro
+@resources: https://github.com/doug-burrell/max30102/tree/master
+"""
 from hr_max30102 import MAX30102
 import hr_hrcalc
 import threading
@@ -43,7 +46,8 @@ class HeartRateMonitor(object):
                     red_data.pop(0)
 
                 if len(ir_data) == 100:
-                    bpm, valid_bpm = hr_hrcalc.calc_hr_and_spo2(ir_data, red_data)
+                    filtered_data = hr_hrcalc.median_filter(ir_data, 3)
+                    bpm, valid_bpm = hr_hrcalc.calc_hr_and_spo2(ir_data)
                     if valid_bpm:
                         bpms.append(bpm)
                         while len(bpms) > 4:

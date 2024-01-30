@@ -1,4 +1,7 @@
-# -*-coding:utf-8-*-
+"""
+@author: Doug Durrel modified Dominik Cedro
+@resources: https://github.com/doug-burrell/max30102/tree/master
+"""
 
 
 from __future__ import print_function

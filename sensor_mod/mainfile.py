@@ -6,30 +6,21 @@
 import tkinter as tk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from hr_heartrate_monitor import HeartRateMonitor
-#from calculate_age_hr import calculate_opinion
+from calculate_age_hr import calculate_opinion
 import time
-import argparse
 
-parser = argparse.ArgumentParser(description="Read and print data from MAX30102")
-parser.add_argument("-r", "--raw", action="store_true",
-                    help="print raw data instead of calculation result")
-parser.add_argument("-t", "--time", type=int, default=30,
-                    help="duration in seconds to read from sensor, default 30")
-args = parser.parse_args()
-
-#hrm = HeartRateMonitor(print_raw=args.raw, print_result=(not args.raw))
-
+hrm = HeartRateMonitor()
 def start_sensor():
     """ start sensor, disable start button and instructions label, wait 15 sec and stop sensor
 
     :return:
     """
     # create instance of HeartRateMonitor class and start sensor
-    #hrm.start_sensor()
+    hrm.start_sensor()
     start_button.config(state='disabled')
     # remove instructions label when sensor is running
     instructions_label.grid_remove()
-    time.sleep(args.time)
+    time.sleep(15)
     stop_sensor()
 
 def stop_sensor():

@@ -1,22 +1,27 @@
 """
-@author: Doug Burrell, modified by Dominik Cedro
+@author: Doug Durrel modified Dominik Cedro
+@resources: https://github.com/doug-burrell/max30102/tree/master
 """
 
 import numpy as np
 
 # # 25 samples per second (in algorithm.h)
-
 # # taking moving average of 4 samples when calculating HR
 # # in algorithm.h, "DONOT CHANGE" comment is attached
-
 # # sampling frequency * 4 (in algorithm.h)
 
 
 # this assumes ir_data and red_data as np.array
 def calc_hr_and_spo2(ir_data, SAMPLE_FREQ=25, MA_SIZE=4, BUFFER_SIZE=1):
-    """
-    By detecting  peaks of PPG cycle and corresponding AC/DC
-    of red/infra-red signal, the an_ratio for the SPO2 is computed.
+    """ By detecting  peaks of PPG cycle and corresponding AC/DC of red/infra-red signal
+    ARGS:
+        ir_data: list of ir data
+        SAMPLE_FREQ: sampling frequency
+        MA_SIZE: moving average size
+        BUFFER_SIZE: buffer size
+    RETURNS:
+        hr: int - heart rate
+        hr_valid: bool - True if heart rate is valid
     """
 
     ir_mean = int(np.mean(ir_data))
@@ -51,10 +56,24 @@ def calc_hr_and_spo2(ir_data, SAMPLE_FREQ=25, MA_SIZE=4, BUFFER_SIZE=1):
     return hr, hr_valid
 
 def moving_average(signal, size):
-    """
-    Compute moving average
-    """
-    return np.convolve(signal, np.ones(size)/size, mode='valid')
+    return [sum(signal[max(0, i-size+1):i+1])/min(size, i+1) for i in range(len(signal))]
+
+def median_filter(signal, window_size):
+    """ This function will apply median filter on the signal
+        ARGS:
+            signal: list of signal data
+            window_size: size of the window
+        RETURNS:
+            filtered_signal: list of filtered signal data
+        """
+    filtered_signal = []
+    for i in range(len(signal)):
+        window_start = max(0, i - window_size + 1)
+        window_end = i + 1
+        window = signal[window_start:window_end]
+        median = np.median(window)
+        filtered_signal.append(median)
+    return filtered_signal
 
 
 def find_peaks(x, size, min_height, min_dist, max_num):
